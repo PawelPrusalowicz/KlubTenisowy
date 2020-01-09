@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXComboBox?>
+<?import com.jfoenix.controls.JFXDatePicker?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import com.jfoenix.controls.JFXTimePicker?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="500.0" prefWidth="700.0" style="-fx-background-color: #466773;" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.ApplicationController">
+    <children>
+        <ImageView fitHeight="21.0" fitWidth="23.0" layoutX="171.0" layoutY="18.0">
+            <image>
+                <Image url="@../resources/tennis.png" />
+            </image>
+        </ImageView>
+        <Label layoutX="18.0" layoutY="18.0" text="Klub Tenisowy" textAlignment="CENTER" textFill="WHITE">
+            <font>
+                <Font name="PT Mono Bold" size="18.0" />
+            </font>
+        </Label>
+        <TabPane layoutX="18.0" layoutY="50.0" prefHeight="434.0" prefWidth="664.0" style="-fx-background-color: #ffffff;" tabClosingPolicy="UNAVAILABLE">
+            <tabs>
+            <Tab style="-fx-font-size: 11;" text="Zarezerwuj usługę">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="250.0" prefWidth="664.0">
+                     <children>
+                        <Label fx:id="reservationCourseNameLabel" layoutX="144.0" layoutY="95.0" text="Nazwa kursu:">
+                           <font>
+                              <Font size="11.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="144.0" layoutY="65.0" text="Rodzaj usługi:">
+                           <font>
+                              <Font size="11.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="reservationCourtNoLabel" layoutX="148.0" layoutY="190.0" text="Liczba kortów:">
+                           <font>
+                              <Font size="11.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="reservationDateLabel" layoutX="149.0" layoutY="220.0" text="Data:">
+                           <font>
+                              <Font size="11.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="reservationHourFromLabel" layoutX="149.0" layoutY="250.0" text="Godzina od:">
+                           <font>
+                              <Font size="11.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="144.0" layoutY="35.0" text="Placówka:">
+                           <font>
+                              <Font size="11.0" />
+                           </font>
+                        </Label>
+                        <JFXTimePicker fx:id="reservationTimeToPicker" defaultColor="#ff912b" layoutX="239.0" layoutY="273.0" prefWidth="250.0" style="-fx-font-size: 11;" />
+                        <JFXDatePicker fx:id="reservationDatePicker" defaultColor="#ff912b" layoutX="239.0" layoutY="213.0" prefWidth="250.0" style="-fx-font-size: 11;" />
+                        <Button fx:id="reservationButton" layoutX="409.0" layoutY="330.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="80.0" style="-fx-background-color: #FF912B; -fx-font-size: 11;" text="Zarezerwuj" textFill="WHITE">
+                           <font>
+                              <Font name="Arial Black" size="8.0" />
+                           </font>
+                        </Button>
+                        <JFXComboBox fx:id="reservationAgencyComboBox" focusColor="#ff8e2b" layoutX="239.0" layoutY="28.0" prefHeight="27.0" prefWidth="250.0" style="-fx-font-size: 11;" />
+                        <JFXTextField fx:id="reservationCourtNoTextField" focusColor="#ff912b" layoutX="239.0" layoutY="183.0" prefHeight="22.0" prefWidth="250.0" style="-fx-font-size: 11;" />
+                        <JFXComboBox fx:id="reservationServiceTypeComboBox" focusColor="#ff8e2b" layoutX="239.0" layoutY="58.0" prefHeight="27.0" prefWidth="250.0" style="-fx-font-size: 11;" />
+                        <JFXComboBox fx:id="reservationCourseNameComboBox" focusColor="#ff8e2b" layoutX="239.0" layoutY="88.0" prefHeight="27.0" prefWidth="250.0" style="-fx-font-size: 11;" />
+                        <Label fx:id="reservationHourToLabel" layoutX="149.0" layoutY="280.0" prefWidth="63.0" text="Godzina do:">
+                           <font>
+                              <Font size="11.0" />
+                           </font>
+                        </Label>
+                        <JFXTimePicker fx:id="reservationTimeFromPicker" defaultColor="#ff912b" layoutX="239.0" layoutY="243.0" prefWidth="250.0" style="-fx-font-size: 11;" />
+                        <Label fx:id="reservationTrainerLabel" layoutX="149.0" layoutY="160.0" text="Trener:">
+                           <font>
+                              <Font size="11.0" />
+                           </font>
+                        </Label>
+                        <JFXComboBox fx:id="reservationTrainerComboBox" focusColor="#ff8e2b" layoutX="239.0" layoutY="150.0" prefHeight="27.0" prefWidth="250.0" style="-fx-font-size: 11;" />
+                     </children></AnchorPane>
+               </content>
+            </Tab>
+                <Tab style="-fx-font-size: 11;" text="Usługi">
+                    <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="211.0" prefWidth="606.0">
+                     <children>
+                        <TableView fx:id="appServiceReservationTable" layoutX="17.0" layoutY="10.0" prefHeight="380.0" prefWidth="630.0">
+                          <columns>
+                            <TableColumn prefWidth="75.0" text="C1" />
+                            <TableColumn prefWidth="75.0" text="C2" />
+                          </columns>
+                        </TableView>
+                     </children></AnchorPane>
+                    </content>
+                </Tab>
+            <Tab style="-fx-font-size: 11;" text="Rezerwacje kortów">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TableView fx:id="appCourtTable" layoutX="17.0" layoutY="10.0" prefHeight="380.0" prefWidth="630.0">
+                           <columns>
+                              <TableColumn prefWidth="75.0" text="C1" />
+                              <TableColumn prefWidth="75.0" text="C2" />
+                           </columns>
+                        </TableView>
+                     </children></AnchorPane>
+               </content>
+            </Tab>
+                <Tab style="-fx-font-size: 11;" text="Placówki">
+                    <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TableView fx:id="appAgencyTable" layoutX="17.0" layoutY="10.0" prefHeight="380.0" prefWidth="349.0">
+                           <columns>
+                              <TableColumn prefWidth="75.0" text="C1" />
+                              <TableColumn prefWidth="75.0" text="C2" />
+                           </columns>
+                        </TableView>
+                        <Label layoutX="395.0" layoutY="25.0" text="Label" />
+                        <Label layoutX="395.0" layoutY="54.0" text="Label" />
+                        <Button layoutX="577.0" layoutY="332.0" mnemonicParsing="false" text="Button">
+                           <font>
+                              <Font size="11.0" />
+                           </font>
+                        </Button>
+                     </children></AnchorPane>
+                    </content>
+                </Tab>
+                <Tab style="-fx-font-size: 11;" text="Pracownicy">
+                    <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TableView fx:id="appWorkersTable" layoutX="17.0" layoutY="10.0" prefHeight="380.0" prefWidth="630.0">
+                           <columns>
+                              <TableColumn prefWidth="75.0" text="C1" />
+                              <TableColumn prefWidth="75.0" text="C2" />
+                           </columns>
+                        </TableView>
+                     </children></AnchorPane>
+                    </content>
+                </Tab>
+                <Tab style="-fx-font-size: 11;" text="Moje dane">
+                    <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                            <Label layoutX="20.0" layoutY="55.0" text="Imię:">
+                                <font>
+                                    <Font size="11.0" />
+                                </font>
+                            </Label>
+                            <Label layoutX="20.0" layoutY="80.0" text="Nazwisko:">
+                                <font>
+                                    <Font size="11.0" />
+                                </font>
+                            </Label>
+                            <Label layoutX="20.0" layoutY="105.0" text="Plec:">
+                                <font>
+                                    <Font size="11.0" />
+                                </font>
+                            </Label>
+                            <Label layoutX="20.0" layoutY="130.0" text="PESEL:">
+                                <font>
+                                    <Font size="11.0" />
+                                </font>
+                            </Label>
+                            <Label layoutX="20.0" layoutY="30.0" text="Użytkownik:">
+                                <font>
+                                    <Font size="11.0" />
+                                </font>
+                            </Label>
+                        <Label layoutX="20.0" layoutY="180.0" text="Miejscowość:">
+                           <font>
+                              <Font size="11.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="20.0" layoutY="155.0" prefHeight="13.0" prefWidth="52.0" text="Email:">
+                           <font>
+                              <Font size="11.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="20.0" layoutY="230.0" prefHeight="13.0" prefWidth="42.0" text="Ulica:">
+                           <font>
+                              <Font size="11.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="20.0" layoutY="280.0" prefHeight="13.0" prefWidth="78.0" text="Nr lokalu:">
+                           <font>
+                              <Font size="11.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="20.0" layoutY="255.0" prefHeight="14.0" prefWidth="67.0" text="Nr budynku:">
+                           <font>
+                              <Font size="11.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="20.0" layoutY="205.0" prefHeight="13.0" prefWidth="78.0" text="Kod pocztowy:">
+                           <font>
+                              <Font size="11.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="mydataUsernameTextField" layoutX="125.0" layoutY="27.0" prefHeight="22.0" prefWidth="220.0">
+                           <font>
+                              <Font size="11.0" />
+                           </font>
+                        </TextField>
+                        <TextField fx:id="mydataNameTextField" layoutX="125.0" layoutY="52.0" prefHeight="22.0" prefWidth="220.0">
+                           <font>
+                              <Font size="11.0" />
+                           </font>
+                        </TextField>
+                        <TextField fx:id="mydataLastNameTextField" layoutX="125.0" layoutY="77.0" prefHeight="22.0" prefWidth="220.0">
+                           <font>
+                              <Font size="11.0" />
+                           </font>
+                        </TextField>
+                        <TextField fx:id="mydataSexTextField" layoutX="125.0" layoutY="102.0" prefHeight="22.0" prefWidth="220.0">
+                           <font>
+                              <Font size="11.0" />
+                           </font>
+                        </TextField>
+                        <TextField fx:id="mydataPeselTextField" layoutX="125.0" layoutY="127.0" prefHeight="22.0" prefWidth="220.0">
+                           <font>
+                              <Font size="11.0" />
+                           </font>
+                        </TextField>
+                        <TextField fx:id="mydataCityTextField" layoutX="125.0" layoutY="177.0" prefHeight="22.0" prefWidth="220.0">
+                           <font>
+                              <Font size="11.0" />
+                           </font>
+                        </TextField>
+                        <TextField fx:id="mydataPostalCodeTextField" layoutX="125.0" layoutY="202.0" prefHeight="22.0" prefWidth="220.0">
+                           <font>
+                              <Font size="11.0" />
+                           </font>
+                        </TextField>
+                        <TextField fx:id="mydataStreetTextField" layoutX="125.0" layoutY="227.0" prefHeight="22.0" prefWidth="220.0">
+                           <font>
+                              <Font size="11.0" />
+                           </font>
+                        </TextField>
+                        <TextField fx:id="mydataBuildingNoTextField" layoutX="125.0" layoutY="252.0" prefHeight="22.0" prefWidth="220.0">
+                           <font>
+                              <Font size="11.0" />
+                           </font>
+                        </TextField>
+                        <TextField fx:id="mydataApartmentNoTextField" layoutX="125.0" layoutY="277.0" prefHeight="22.0" prefWidth="220.0">
+                           <font>
+                              <Font size="11.0" />
+                           </font>
+                        </TextField>
+                            <Button fx:id="mydataEditButton" layoutX="125.0" layoutY="335.0" mnemonicParsing="false" prefHeight="6.0" prefWidth="60.0" style="-fx-background-color: #FF912B; -fx-font-size: 11;" text="Edytuj" textFill="WHITE">
+                                <font>
+                                    <Font name="Arial Black" size="8.0" />
+                                </font>
+                            </Button>
+                        <TextField fx:id="mydataEmailTextField" layoutX="125.0" layoutY="152.0" prefHeight="22.0" prefWidth="220.0">
+                           <font>
+                              <Font size="11.0" />
+                           </font>
+                        </TextField>
+                        <Label fx:id="mydataHireDateLabel" layoutX="20.0" layoutY="305.0" prefHeight="14.0" prefWidth="98.0" text="Data zatrudnienia:">
+                           <font>
+                              <Font size="11.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="mydataHireDateTextField" layoutX="125.0" layoutY="302.0" prefHeight="22.0" prefWidth="220.0">
+                           <font>
+                              <Font size="11.0" />
+                           </font>
+                        </TextField>
+                        <Label fx:id="mydataLicenceLabel" layoutX="359.0" layoutY="30.0" prefHeight="13.0" prefWidth="78.0" text="Licencja:">
+                           <font>
+                              <Font size="11.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="mydataLicenceTextField" layoutX="430.0" layoutY="27.0" prefHeight="22.0" prefWidth="220.0">
+                           <font>
+                              <Font size="11.0" />
+                           </font>
+                        </TextField>
+                        <Button fx:id="mydataSaveButton" layoutX="192.0" layoutY="335.0" mnemonicParsing="false" prefHeight="6.0" prefWidth="60.0" style="-fx-background-color: #FF912B; -fx-font-size: 11;" text="Zapisz" textFill="WHITE">
+                           <font>
+                              <Font name="Arial Black" size="8.0" />
+                           </font>
+                        </Button>
+                        <Button fx:id="mydataChangePsswdButton" layoutX="259.0" layoutY="335.0" mnemonicParsing="false" prefHeight="22.0" prefWidth="86.0" style="-fx-background-color: #FF912B; -fx-font-size: 11;" text="Zmień hasło" textFill="WHITE">
+                           <font>
+                              <Font name="Arial Black" size="8.0" />
+                           </font>
+                        </Button>
+                        <Label fx:id="mydataWorkExpLabel" layoutX="359.0" layoutY="55.0" prefHeight="13.0" prefWidth="78.0" text="Staż:">
+                           <font>
+                              <Font size="11.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="mydataWorkExpTextField" layoutX="430.0" layoutY="52.0" prefHeight="22.0" prefWidth="220.0">
+                           <font>
+                              <Font size="11.0" />
+                           </font>
+                        </TextField>
+                        <Label fx:id="mydataAchievementsLabel" layoutX="359.0" layoutY="80.0" prefHeight="13.0" prefWidth="78.0" text="Osiągnięcia:">
+                           <font>
+                              <Font size="11.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="mydataAchievementsTextField" layoutX="430.0" layoutY="77.0" prefHeight="247.0" prefWidth="220.0">
+                           <font>
+                              <Font size="11.0" />
+                           </font>
+                        </TextField>
+                     </children></AnchorPane>
+                    </content>
+                </Tab>
+            </tabs>
+        </TabPane>
+        <AnchorPane layoutX="574.0" layoutY="22.0" prefHeight="21.0" prefWidth="108.0" style="-fx-background-color: #ffffff;">
+            <children>
+                <ImageView fitHeight="15.0" fitWidth="16.0" layoutX="4.0" layoutY="3.0">
+                    <image>
+                        <Image url="@../resources/user.png" />
+                    </image>
+                </ImageView>
+            <Label alignment="TOP_RIGHT" contentDisplay="RIGHT" layoutX="25.0" layoutY="3.0" prefHeight="15.0" prefWidth="81.0" text="Użytkownik" textAlignment="JUSTIFY">
+               <font>
+                  <Font size="11.0" />
+               </font>
+            </Label>
+            </children></AnchorPane>
+      <Label fx:id="logoutLabel" layoutX="643.0" layoutY="5.0" prefHeight="17.0" prefWidth="38.0" text="Wyloguj" textFill="#ff912b">
+         <font>
+            <Font size="10.0" />
+         </font>
+      </Label>
+    </children>
+</AnchorPane>
