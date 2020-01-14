@@ -16,9 +16,9 @@ public class DBConnection {
 
                 Class.forName("oracle.jdbc.driver.OracleDriver");
                 conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setContentText("Connected to database");
-                alert.show();
+//                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+//                alert.setContentText("Connected to database");
+//                alert.show();
 
             } catch (Exception exc) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);

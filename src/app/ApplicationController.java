@@ -8,19 +8,24 @@ import com.jfoenix.controls.JFXTimePicker;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.*;
 import java.sql.Date;
-import java.util.ResourceBundle;
+import java.util.*;
 
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 
 public class ApplicationController {
 
@@ -29,6 +34,9 @@ public class ApplicationController {
 
     @FXML
     private URL location;
+
+    @FXML
+    private Tab makeReservationTab;
 
     @FXML
     private Label reservationCourseNameLabel;
@@ -52,16 +60,16 @@ public class ApplicationController {
     private Button reservationButton;
 
     @FXML
-    private JFXComboBox<?> reservationAgencyComboBox;
+    private JFXComboBox<Label> reservationAgencyComboBox;
 
     @FXML
     private JFXTextField reservationCourtNoTextField;
 
     @FXML
-    private JFXComboBox<?> reservationServiceTypeComboBox;
+    private JFXComboBox<Label> reservationServiceTypeComboBox;
 
     @FXML
-    private JFXComboBox<?> reservationCourseNameComboBox;
+    private JFXComboBox<Label> reservationCourseNameComboBox;
 
     @FXML
     private Label reservationHourToLabel;
@@ -73,19 +81,58 @@ public class ApplicationController {
     private Label reservationTrainerLabel;
 
     @FXML
-    private JFXComboBox<?> reservationTrainerComboBox;
+    private JFXComboBox<Label> reservationTrainerComboBox;
 
     @FXML
-    private TableView<?> appServiceReservationTable;
+    private Tab servicesTab;
 
     @FXML
-    private TableView<?> appAgencyTable;
+    private TableView<Service> appServiceReservationTable;
+
+    @FXML
+    private Tab courtReservationsTab;
+
+    @FXML
+    private TableView<CourtReservation> appCourtTable;
+
+    @FXML
+    private Tab clientsTab;
+
+    @FXML
+    private TableView<Client> appClientsTable;
+
+    @FXML
+    private TextField clientsSearchTextLabel;
+
+    @FXML
+    private Button clientsSearchButton;
+
+    @FXML
+    private Button clientsSaveButton;
+
+    @FXML
+    private Button clientsAddButton;
+
+    @FXML
+    private Tab workersTab;
 
     @FXML
     private TableView<Worker> appWorkersTable;
 
     @FXML
-    private TableView<?> appCourtTable;
+    private TextField workersSearchTextLabel;
+
+    @FXML
+    private Button workersSearchButton;
+
+    @FXML
+    private Button workersSaveButton;
+
+    @FXML
+    private Button workersAddButton;
+
+    @FXML
+    private Tab myDataTab;
 
     @FXML
     private TextField mydataUsernameTextField;
@@ -156,8 +203,20 @@ public class ApplicationController {
     @FXML
     private Label logoutLabel;
 
+    ObservableList<Worker> workers;
+    ObservableList<CourtReservation>courtReservations;
+    ObservableList<Service> services;
+    ObservableList<Client> clients;
+
+
+    Set<Integer> workersChangedIds, clientChangedIds;
+
     @FXML
     void initialize() {
+
+
+        workersChangedIds = new HashSet<>();
+        clientChangedIds = new HashSet<>();
 
         logoutLabel.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
@@ -180,84 +239,403 @@ public class ApplicationController {
             }
         });
 
+        workersAddButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                Worker worker = new Worker("Przykładowe Imie");
+                workers.add(worker);
+                appWorkersTable.setItems(workers);
 
-        displayWorkers();
+            }
+        });
 
+        clientsAddButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                Client client = new Client("Imię");
+                clients.add(client);
+                appClientsTable.setItems(clients);
+
+            }
+        });
+
+
+        workersSaveButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                Worker.saveAll(workers, workersChangedIds);
+            }
+        });
+
+        clientsSaveButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                Client.saveAll(clients, clientChangedIds);
+            }
+        });
+
+        workersSearchButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+
+                workers = Worker.getWorkers(workersSearchTextLabel.getText());
+                appWorkersTable.setItems(workers);
+
+            }
+        });
+
+        clientsSearchButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+
+                clients = Client.getClients(clientsSearchTextLabel.getText());
+                appClientsTable.setItems(clients);
+            }
+        });
+
+        //mydataAchievementsTextField.getProperties()
+
+        //displayWorkers();
+
+        workers = WorkersTable.initializeWorkersTable(appWorkersTable, workersChangedIds);
+        clients = ClientsTable.initializeClientsTable(appClientsTable, clientChangedIds);
+
+
+//        courtReservationsTab.setOnSelectionChanged(new EventHandler<Event>() {
+//            @Override
+//            public void handle(Event event) {
+//
+//            }
+//        });
+
+        ServicesTable.initializeServicesTable(appServiceReservationTable);
+
+        courtReservations = CourtReservationTable.initializeCourtReservationsTable(appCourtTable);
+
+
+//        servicesTab.setOnSelectionChanged(new EventHandler<Event>() {
+//            @Override
+//            public void handle(Event event) {
+//                ServicesTable.initializeCourtReservationsTable(appServiceReservationTable);
+//            }
+//        });
+
+        reservationCourseNameComboBox.setDisable(true);
+        reservationTrainerComboBox.setDisable(true);
+        reservationCourtNoTextField.setDisable(true);
+        reservationDatePicker.setDisable(true);
+        reservationTimeFromPicker.setDisable(true);
+        reservationTimeToPicker.setDisable(true);
+        reservationServiceTypeComboBox.setDisable(true);
+        MakeReservationTab.initializeReservationAgencyComboBox(reservationAgencyComboBox);
+
+        reservationAgencyComboBox.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+                String value= reservationAgencyComboBox.getValue().getText();
+                String kept = value.substring( 0, value.indexOf(","));
+                Integer agencyId = Integer.parseInt(value.substring(kept.indexOf(",")+1, kept.length()));
+                Reservation.getInstance().setAgencyId(agencyId);
+                System.out.println(Reservation.getInstance().info());
+
+                reservationServiceTypeComboBox.setDisable(false);
+                MakeReservationTab.initializeReservationServiceTypeComboBox( reservationServiceTypeComboBox);
+
+            }
+        });
+
+        reservationServiceTypeComboBox.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+
+                String sql = "Select id_uslugi from uslugi where nazwa_uslugi='" +
+                        reservationServiceTypeComboBox.getValue().getText()+ "' and Id_klubu=" + User.getInstance().getClubId();
+
+                Connection connection = DBConnection.getConnection();
+
+                if(connection == null){
+                    return;
+                }
+
+                Integer serviceId = null;
+                Statement statement = null;
+                ResultSet rs = null;
+
+
+                try {
+                    statement = connection.createStatement();
+                    rs = statement.executeQuery(sql);
+                    rs.next();
+
+                    Reservation.getInstance().setServiceTypeId(rs.getInt("id_uslugi"));
+                    System.out.println(Reservation.getInstance().info());
+
+
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
+                if (!reservationTrainerComboBox.getItems().isEmpty()) {
+                    reservationTrainerComboBox.getSelectionModel().clearSelection();
+                    reservationTrainerComboBox.getItems().removeAll();
+                    reservationTrainerComboBox.getItems().clear();
+                }
+
+                if (reservationServiceTypeComboBox.getValue().getText().equals("Kurs grupowy")) {
+
+                    reservationCourtNoTextField.setText(null);
+                    reservationDatePicker.setValue(null);
+                    reservationTimeFromPicker.setValue(null);
+                    reservationTimeToPicker.setValue(null);
+                    Reservation.getInstance().setTrainerId(0);
+                    Reservation.getInstance().setTimeTo(null);
+                    Reservation.getInstance().setTimeFrom(null);
+                    Reservation.getInstance().setDate(null);
+                    Reservation.getInstance().setCourtsNumber(0);
+                    Reservation.getInstance().setServiceTypeName("Kurs grupowy");
+
+                    reservationCourseNameComboBox.setDisable(false);
+                    reservationTrainerComboBox.setDisable(true);
+                    reservationCourtNoTextField.setDisable(true);
+                    reservationDatePicker.setDisable(true);
+                    reservationTimeFromPicker.setDisable(true);
+                    reservationTimeToPicker.setDisable(true);
+
+
+                    //String value= reservationServiceTypeComboBox.getValue().getText();
+                    //String kept = value.substring( 4, value.indexOf(","));
+                    //Integer agencyId = Integer.parseInt(value.substring(kept.indexOf(",")+1, kept.length()));
+
+                    MakeReservationTab.initializeReservationCourseNameComboBox(reservationCourseNameComboBox);
+                }
+                else if (reservationServiceTypeComboBox.getValue().getText().equals("Lekcja z trenerem")){
+
+                    Reservation.getInstance().setTrainerId(0);
+                    Reservation.getInstance().setServiceTypeName("Lekcja z trenerem");
+
+                    //reservationCourseNameComboBox.getValue().setText("");
+                    //reservationCourseNameComboBox.getItems().removeAll();
+                    reservationCourseNameComboBox.getItems().clear();
+                    reservationCourseNameComboBox.getSelectionModel().clearSelection();
+
+
+                    reservationCourseNameComboBox.setDisable(true);
+                    reservationTrainerComboBox.setDisable(false);
+                    reservationCourtNoTextField.setDisable(false);
+                    reservationDatePicker.setDisable(false);
+                    reservationTimeFromPicker.setDisable(false);
+                    reservationTimeToPicker.setDisable(false);
+
+
+
+                    MakeReservationTab.initializeReservationTrainerComboBox( reservationTrainerComboBox,  null);
+                }
+                else if (reservationServiceTypeComboBox.getValue().getText().equals("Pojedyńcza gra")){
+
+
+                    Reservation.getInstance().setServiceRealisationId(0);
+                    Reservation.getInstance().setTrainerId(0);
+                    Reservation.getInstance().setServiceTypeName("Pojedyńcza gra");
+
+                    reservationCourseNameComboBox.getSelectionModel().clearSelection();
+                    reservationCourseNameComboBox.getItems().removeAll();
+                    reservationCourseNameComboBox.getItems().clear();
+
+                    reservationCourseNameComboBox.setDisable(true);
+                    reservationTrainerComboBox.setDisable(true);
+                    reservationCourtNoTextField.setDisable(false);
+                    reservationDatePicker.setDisable(false);
+                    reservationTimeFromPicker.setDisable(false);
+                    reservationTimeToPicker.setDisable(false);
+                }
+
+                validateReservationButton();
+            }
+        });
+
+
+        reservationTrainerComboBox.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if (!reservationTrainerComboBox.getItems().isEmpty()
+                        && reservationTrainerComboBox.getValue() != null
+                        && !reservationTrainerComboBox.getValue().getText().equals("")
+                        ) {
+
+                    System.out.println();
+
+                    String value = reservationTrainerComboBox.getValue().getText();
+                    String kept = value.substring(4, value.indexOf(","));
+                    Integer trainerId = Integer.parseInt(kept);
+                    //Integer trainerId = Integer.parseInt(value.substring(kept.indexOf(",")+1, kept.length()));
+                    Reservation.getInstance().setTrainerId(trainerId);
+                    System.out.println(Reservation.getInstance().info());
+
+                    validateReservationButton();
+                }
+            }
+        });
+
+
+        reservationCourseNameComboBox.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+
+                if (!reservationTrainerComboBox.getItems().isEmpty()) {
+                    reservationTrainerComboBox.getSelectionModel().clearSelection();
+                    reservationTrainerComboBox.getItems().removeAll();
+                    reservationTrainerComboBox.getItems().clear();
+                }
+
+                if(reservationCourseNameComboBox.getValue() == null){
+                    return;
+                }
+
+                String value= reservationCourseNameComboBox.getValue().getText();
+                String kept = value.substring( 3, value.indexOf(","));
+                Integer serviceRealizationId = Integer.parseInt(kept); //Integer.parseInt(value.substring(kept.indexOf(",")+1, kept.length()));
+                Reservation.getInstance().setServiceRealisationId(serviceRealizationId);
+                System.out.println(Reservation.getInstance().info());
+
+
+                String findTrainerSql = "Select Id_pracownika, Imie, Nazwisko from pracownicy where id_pracownika in" +
+                        "(Select Id_pracownika from realizacje_uslug where id_realizacji_uslugi=" +
+                        Reservation.getInstance().getServiceRealisationId()+ ")";
+
+                Connection connection = DBConnection.getConnection();
+
+                if(connection == null){
+                    return;
+                }
+
+                Statement statement = null;
+                ResultSet rs = null;
+
+                try {
+                    statement = connection.createStatement();
+                    rs = statement.executeQuery(findTrainerSql);
+                    rs.next();
+
+                    //Reservation.getInstance().setServiceTypeId(rs.getInt("id_uslugi"));
+                    reservationTrainerComboBox.getItems().add(new Label(
+                            "Id: " +
+                                    rs.getInt("Id_pracownika") + ", " +
+                                    rs.getString("Imie") + " " + rs.getString("Nazwisko")
+
+                    ));
+
+                    reservationTrainerComboBox.getSelectionModel().select(0);
+
+
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+
+                //reservationTrainerComboBox.getItems().add(new Label())
+
+                validateReservationButton();
+
+            }
+        });
+
+
+        reservationCourtNoTextField.textProperty().addListener((observable, oldValue, newValue) -> {
+
+            if (newValue == null || newValue.equals("")){
+                Reservation.getInstance().setCourtsNumber(0);
+            }
+            else {
+                Reservation.getInstance().setCourtsNumber(Integer.parseInt(newValue));
+            }
+            System.out.println(Reservation.getInstance().info());
+            validateReservationButton();
+        });
+
+        reservationDatePicker.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue==null) {
+                Reservation.getInstance().setDate(null);
+            }
+            else {
+                Reservation.getInstance().setDate(Date.valueOf(newValue));
+            }
+            System.out.println(Reservation.getInstance().info());
+            validateReservationButton();
+        });
+
+        reservationTimeFromPicker.valueProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue==null) {
+                Reservation.getInstance().setTimeFrom(null);
+            }
+            else {
+                Reservation.getInstance().setTimeFrom(Time.valueOf(newValue));
+            }
+            System.out.println(Reservation.getInstance().info());
+            validateReservationButton();
+        });
+
+        reservationTimeToPicker.valueProperty().addListener((observable, oldValue, newValue) -> {
+
+            if (newValue==null) {
+                Reservation.getInstance().setTimeTo(null);
+            }
+            else {
+                Reservation.getInstance().setTimeTo(Time.valueOf(newValue));
+            }
+            System.out.println(Reservation.getInstance().info());
+            validateReservationButton();
+        });
+
+        reservationButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Reservation.getInstance().saveReservation();
+            }
+        });
+
+        validateReservationButton();
     }
 
-    void displayWorkers() {
+    public void validateReservationButton(){
 
-        TableColumn<Worker, Integer> workersTableColumnId = new TableColumn<>("Id");
-        workersTableColumnId.setCellValueFactory( new PropertyValueFactory<>("Id_Pracownika"));
+        reservationButton.setDisable(true);
 
-        TableColumn<Worker, String> workersTableColumnImie = new TableColumn<>("Imię");
-        workersTableColumnImie.setCellValueFactory( new PropertyValueFactory<>("Imie"));
+        if (Reservation.getInstance().getServiceTypeName() == null){
+            return;
+        }
 
-        TableColumn<Worker, String> workersTableColumnNazwisko = new TableColumn<>("Nazwisko");
-        workersTableColumnNazwisko.setCellValueFactory( new PropertyValueFactory<>("Nazwisko"));
+        if ( Reservation.getInstance().getServiceTypeName().equals("Lekcja z trenerem")){
 
-        TableColumn<Worker, String> workersTableColumnPlec = new TableColumn<>("Płeć");
-        workersTableColumnPlec.setCellValueFactory( new PropertyValueFactory<>("Plec"));
+            if (reservationTrainerComboBox.getValue() !=null &&
+                    !reservationTrainerComboBox.getValue().getText().equals("") &&
+                    !reservationCourtNoTextField.getText().equals("") &&
+                    reservationDatePicker.getValue() != null &&
+                    reservationTimeFromPicker.getValue() != null &&
+                    reservationTimeToPicker.getValue() != null) {
+                reservationButton.setDisable(false);
+            }
 
-        TableColumn<Worker, String> workersTableColumnPESEL = new TableColumn<>("PESEL");
-        workersTableColumnPESEL.setCellValueFactory( new PropertyValueFactory<>("PESEL"));
+        }
+        else if (Reservation.getInstance().getServiceTypeName().equals("Pojedyńcza gra")){
 
-        TableColumn<Worker, String> workersTableColumnMiejscowosc = new TableColumn<>("Miejscowość");
-        workersTableColumnMiejscowosc.setCellValueFactory( new PropertyValueFactory<>("Miejscowosc"));
+            if (!reservationCourtNoTextField.getText().equals("") &&
+                    reservationDatePicker.getValue() != null &&
+                    reservationTimeFromPicker.getValue() != null &&
+                    reservationTimeToPicker.getValue() != null) {
+                reservationButton.setDisable(false);
+            }
 
-        TableColumn<Worker, String> workersTableColumnUlica = new TableColumn<>("Ulica");
-        workersTableColumnUlica.setCellValueFactory( new PropertyValueFactory<>("Ulica"));
+        }
+        else if (Reservation.getInstance().getServiceTypeName().equals("Kurs grupowy")){
 
-        TableColumn<Worker, String> workersTableColumnNrBudynku = new TableColumn<>("Nr Budynku");
-        workersTableColumnNrBudynku.setCellValueFactory( new PropertyValueFactory<>("Nr_Budynku"));
+            if (reservationCourseNameComboBox.getValue() != null &&
+                    !reservationCourseNameComboBox.getValue().getText().equals("")){
+                reservationButton.setDisable(false);
+            }
 
-        TableColumn<Worker, String> workersTableColumnNrLokalu = new TableColumn<>("Nr Lokalu");
-        workersTableColumnNrLokalu.setCellValueFactory( new PropertyValueFactory<>("Nr_Lokalu"));
+        }
 
-        TableColumn<Worker, String> workersTableColumnKodPocztowy = new TableColumn<>("Kod Pocztowy");
-        workersTableColumnKodPocztowy.setCellValueFactory( new PropertyValueFactory<>("Kod_Pocztowy"));
-
-        TableColumn<Worker, Date> workersTableColumnData = new TableColumn<>("Data Zatrudnienia");
-        workersTableColumnData.setCellValueFactory( new PropertyValueFactory<>("Data_Zatrudnienia"));
-
-        TableColumn<Worker, Integer> workersTableColumnIdKlubu = new TableColumn<>("Id Klubu");
-        workersTableColumnIdKlubu.setCellValueFactory( new PropertyValueFactory<>("Id_Klubu"));
-
-        TableColumn<Worker, Integer> workersTableColumnIdPlacowki = new TableColumn<>("Id Placówki");
-        workersTableColumnIdPlacowki.setCellValueFactory( new PropertyValueFactory<>("Id_Placowki"));
-
-        TableColumn<Worker, Integer> workersTableColumnIdStanowiska = new TableColumn<>("Id Stanowiska");
-        workersTableColumnIdStanowiska.setCellValueFactory( new PropertyValueFactory<>("Id_Stanowiska"));
-
-
-
-        appWorkersTable.getColumns().clear();
-        appWorkersTable.getColumns().add(workersTableColumnId);
-        appWorkersTable.getColumns().add(workersTableColumnImie);
-        appWorkersTable.getColumns().add(workersTableColumnNazwisko);
-        appWorkersTable.getColumns().add(workersTableColumnPlec);
-        appWorkersTable.getColumns().add(workersTableColumnPESEL);
-        appWorkersTable.getColumns().add(workersTableColumnMiejscowosc);
-        appWorkersTable.getColumns().add(workersTableColumnUlica);
-        appWorkersTable.getColumns().add(workersTableColumnNrBudynku);
-        appWorkersTable.getColumns().add(workersTableColumnNrLokalu);
-        appWorkersTable.getColumns().add(workersTableColumnKodPocztowy);
-        appWorkersTable.getColumns().add(workersTableColumnData);
-        appWorkersTable.getColumns().add(workersTableColumnIdKlubu);
-        appWorkersTable.getColumns().add(workersTableColumnIdPlacowki);
-        appWorkersTable.getColumns().add(workersTableColumnIdStanowiska);
-
-
-
-        //TableColumn workersTableColumnString = new TableColumn("Imię2"); // np jak chcemy przechowywać inta dla workera
-        // tabela - dodawanie, usuwanie, update, filtorwanie, niech odświeża
-
-
-        ObservableList<Worker> workers = Worker.getAll(DBConnection.getConnection());
-
-        appWorkersTable.setItems(workers); //workersList jak publishers
     }
 
 }
-
-//cellFactoryProperty

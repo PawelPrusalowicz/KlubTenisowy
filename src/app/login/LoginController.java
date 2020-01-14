@@ -1,5 +1,6 @@
 package app.login;
 
+import app.User;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -77,6 +78,8 @@ public class LoginController implements Initializable {
                 Scene scene = new Scene(root);
                 programStage.setScene(scene);
                 programStage.show();
+
+                User.getInstance().setClubId(1);
 
             } catch (IOException e) {
                 e.printStackTrace();
