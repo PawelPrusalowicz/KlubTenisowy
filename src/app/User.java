@@ -13,6 +13,7 @@ public class User {
 
     int clubId, Id;
     UserType userType;
+    String login;
 
     private User(){}
 
@@ -45,5 +46,13 @@ public class User {
 
     public void setId(int id) {
         Id = id;
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
     }
 }

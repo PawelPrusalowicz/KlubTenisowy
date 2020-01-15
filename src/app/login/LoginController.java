@@ -69,7 +69,8 @@ public class LoginController implements Initializable {
 
             Stage stage = (Stage) loginButton.getScene().getWindow();
             stage.close();
-
+            User user=User.getInstance();
+            user.setLogin(loginUsername.getText());
             Stage programStage = new Stage();
 
             try {

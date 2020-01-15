@@ -212,7 +212,7 @@ public class ApplicationController {
     Set<Integer> workersChangedIds, clientChangedIds;
 
     @FXML
-    void initialize() {
+    void initialize() throws SQLException {
 
 
         workersChangedIds = new HashSet<>();
@@ -595,6 +595,85 @@ public class ApplicationController {
         });
 
         validateReservationButton();
+        mydataUsernameTextField.setEditable(false);
+        User user=User.getInstance();
+        mydataUsernameTextField.setText(user.getLogin());
+        mydataUsernameTextField.setDisable(true);
+        String sql = "Select * from pracownicy p left join trenerzy t on p.id_Pracownika = t.id_pracownika where p.id_Pracownika=5";
+        Connection connection = DBConnection.getConnection();
+        Statement statement = connection.createStatement();
+        ResultSet rs = statement.executeQuery(sql);
+        rs.next();
+        mydataNameTextField.setText(rs.getString("Imie"));
+        mydataNameTextField.setEditable(false);
+        mydataLastNameTextField.setText(rs.getString("Nazwisko"));
+        mydataLastNameTextField.setEditable(false);
+        mydataSexTextField.setText(rs.getString("Plec"));
+        mydataSexTextField.setEditable(false);
+        mydataAchievementsTextField.setText(rs.getString("Osiagniecia"));
+        mydataAchievementsTextField.setEditable(false);
+        mydataLicenceTextField.setText(rs.getString("Licencja"));
+        mydataLicenceTextField.setEditable(false);
+        mydataWorkExpTextField.setText(rs.getString("Staz"));
+        mydataWorkExpTextField.setEditable(false);
+        mydataBuildingNoTextField.setText(rs.getString("Nr_Budynku"));
+        mydataBuildingNoTextField.setEditable(false);
+        mydataApartmentNoTextField.setText(rs.getString("Nr_Lokalu"));
+        mydataApartmentNoTextField.setEditable(false);
+        mydataCityTextField.setText(rs.getString("Miejscowosc"));
+        mydataCityTextField.setEditable(false);
+        mydataPeselTextField.setText(rs.getString("PESEL"));
+        mydataPeselTextField.setEditable(false);
+        mydataHireDateTextField.setText(rs.getString("Data_Zatrudnienia"));
+        mydataHireDateTextField.setEditable(false);
+        mydataStreetTextField.setText(rs.getString("Ulica"));
+        mydataEmailTextField.setEditable(false);
+        mydataEditButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                mydataNameTextField.setEditable(true);
+                mydataLastNameTextField.setEditable(true);
+                mydataCityTextField.setEditable(true);
+                mydataApartmentNoTextField.setEditable(true);
+                mydataBuildingNoTextField.setEditable(true);
+                mydataStreetTextField.setEditable(true);
+                mydataEmailTextField.setEditable(true);
+                mydataNameTextField.setEditable(true);
+            }
+        });
+        mydataSaveButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent mouseEvent) {
+                mydataNameTextField.setEditable(false);
+                mydataLastNameTextField.setEditable(false);
+                mydataCityTextField.setEditable(false);
+                mydataApartmentNoTextField.setEditable(false);
+                mydataBuildingNoTextField.setEditable(false);
+                mydataStreetTextField.setEditable(false);
+                mydataEmailTextField.setEditable(false);
+
+                for(Worker worker : workers)
+                {
+                    try {
+                        if(worker.getId_Pracownika()==rs.getInt("Id_Pracownika"))
+                        {
+                            worker.setImie(mydataNameTextField.getText());
+                            worker.setNazwisko(mydataLastNameTextField.getText());
+                            worker.setMiejscowosc(mydataCityTextField.getText());
+                            worker.setNr_Lokalu(mydataApartmentNoTextField.getText());
+                            worker.setNr_Budynku(mydataBuildingNoTextField.getText());
+                            worker.setUlica(mydataStreetTextField.getText());
+                        }
+                        Worker.updateWorker(worker);
+                        //appWorkersTable.setItems(workers);
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+
+            }
+        });
     }
 
     public void validateReservationButton(){
