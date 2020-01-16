@@ -13,7 +13,7 @@ public class User {
 
     int clubId, Id;
     UserType userType;
-    String login;
+    String login,password;
 
     private User(){}
 
@@ -54,5 +54,13 @@ public class User {
 
     public void setLogin(String login) {
         this.login = login;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
